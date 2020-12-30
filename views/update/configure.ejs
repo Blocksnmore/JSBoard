@@ -9,35 +9,31 @@
 <meta property="og:description" content="JSBoard update homepage"/>
 <meta name="theme-color" content="#333333">
 <body>
-<% if(needConfig) { %>
-    <% if(error){ %>
-        <h3>An error has occured! This is likely an issue with unreachable mysql</h3>
-        <h4><%= error %></h4>
+    <% if(needConfig) { %>
+        <% if(error){ %>
+            <h3>An error has occured! This is likely an issue with unreachable MongoDB</h3>
+            <h4><%= error %></h4>
+        <% } %>
+        <h2>JSBoard configuration</h2>
+        <h3>Please fill all the fields</h3>
+        <hr>
+        <div>
+            <form action="/update/configure" method="POST">
+                <input type="text" id="sitename" name="sitename" placeholder="Site name" required><br>
+                <input type="text" id="mongologin" name="mongologin" placeholder="MongoDB url" required><br>
+                <input type="email" id="mainuseremail" name="mainuseremail" placeholder="Main user email" required><br>
+                <input type="text" id="mainusername" name="mainusername" placeholder="Main user name" required><br>
+                <input type="password" id="mainuserpassword" name="mainuserpassword" placeholder="Main user password" required><br>
+                <button type="submit" class="button">Submit</button>
+            </form>
+        </div>
+    <% }else{ %>
+        <div>
+            <h2>JSBoard has already been configured!</h2>
+            <h2>You will be redirected home in 5 seconds</h2>
+            <h2>If this is an error delete the file at</h2>
+            <h2><code>/modules/core/config.json</code></h2>
+        </div>
+        <meta http-equiv="refresh" content="5; URL=/home" />
     <% } %>
-    <h2>JSBoard configuration</h2>
-    <h3>Please fill all the fields</h3>
-    <hr>
-    <div>
-        <form action="/update/configure" method="POST">
-            <input type="text" id="sitename" name="sitename" placeholder="Site name" required><br>
-            <input type="text" id="mysqlhostname" name="mysqlhostname" placeholder="Mysql host url" required><br>
-            <input type="number" id="mysqlport" name="mysqlport" placeholder="Mysql port" required><br>
-            <input type="text" id="mysqlname" name="mysqlname" placeholder="Mysql database name" required><br>
-            <input type="text" id="mysqlusername" name="mysqlusername" placeholder="Mysql user name" required><br>
-            <input type="password" id="mysqluserpassword" name="mysqluserpassword" placeholder="Mysql user password" required><br>
-            <input type="email" id="mainuseremail" name="mainuseremail" placeholder="Main user email" required><br>
-            <input type="text" id="mainusername" name="mainusername" placeholder="Main user name" required><br>
-            <input type="password" id="mainuserpassword" name="mainuserpassword" placeholder="Main user password" required><br>
-            <button type="submit" class="button">Submit</button>
-        </form>
-    </div>
-<% }else{ %>
-    <div>
-        <h2>JSBoard has already been configured!</h2>
-        <h2>You will be redirected home in 5 seconds</h2>
-        <h2>If this is an error delete the file at</h2>
-        <h2><code>/modules/core/config.json</code></h2>
-    </div>
-    <meta http-equiv="refresh" content="5; URL=/home" />
-<% } %>
 </body>

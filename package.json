@@ -4,14 +4,15 @@
   "description": "Some stuff relating to using EJS",
   "main": "index.js",
   "scripts": {
-    "install": "npm i express ejs mysql",
+    "install": "npm i express ejs quickmongo bcrypt",
     "run": "node index.js"
   },
   "author": "Blocks_n_more",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
-    "mysql": "^2.18.1"
+    "quickmongo": "^3.0.0"
   }
 }

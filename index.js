@@ -1,5 +1,4 @@
 const express = require("express");
-const mysql = require("mysql");
 const fs = require("fs");
 const app = express();
 const core = require("./modules/core/index.js");
@@ -20,7 +19,7 @@ fs.readdir("./modules/", async (err, files) => {
 
 // Source
 app.set("view-engine", "ejs");
-app.set("view engine", "ejs")
+app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.get("/*", async (req, res) => {
   let config = core.config();

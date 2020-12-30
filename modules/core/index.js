@@ -3,7 +3,9 @@
  * @description JSBoard core module
  **/
 const fs = require("fs");
-const mysql = require("mysql");
+const { config } = require("process");
+const mongo = require("quickmongo");
+const bcrypt = require("bcrypt");
 
 exports.needConfig = async function () {
   if (!fs.existsSync("./modules/core/config.json")) return true;
@@ -19,6 +21,16 @@ exports.config = async function () {
   return JSON.parse(fs.readFileSync("./modules/core/config.json", "utf8"));
 };
 
+exports.getDb = function () {
+  if (!fs.existsSync("./modules/core/config.json")) return null;
+  else
+    return new mongo.Database(
+      JSON.parse(
+        fs.readFileSync("./modules/core/config.json", "utf8")
+      ).mongologin
+    );
+};
+
 exports.overridePostUrl = function (path) {
   if (path === "update/configure") return true;
 };
@@ -28,36 +40,38 @@ exports.overridePost = async function (req, res, path, data) {
 };
 
 async function updateConfig(req, res, path, data) {
-  let config;
-  if (!fs.existsSync("./modules/core/config.json"))
-    config = { isConfigured: false, version: "Beta 2.0.0", updateMode: true };
-  else
-    config = JSON.parse(fs.readFileSync("./modules/core/config.json", "utf8"));
-  let connection = mysql.createConnection({
-    host: req.body.mysqlhostname,
-    user: req.body.mysqlusername,
-    port: req.body.mysqlport,
-    password: req.body.mysqluserpassword,
-    database: req.body.mysqlname,
-  });
+  let config = {
+    isConfigured: true,
+    version: "Beta 2.0.0",
+    updateMode: false,
+    mongourl: req.body.mongologin,
+  };
   try {
-    let connecterrored;
-    await connection.connect(function (err, misc) {
-      let data = {
-        config: config,
-        needConfig: config.updateMode,
-        updatemode: config.updateMode,
-        error: err,
-      };
-      if (err) {
-        connecterrored = true;
-        res.render("./update/configure.ejs", data);
-      }
+    let db = await new mongo.Database(config.mongourl);
+    await db.all();
+    await db.set("jsboard.version", config.version);
+  } catch (e) {
+    return res.render("update/configure.ejs", {
+      config: config,
+      needConfig: true,
+      error: e,
     });
-    await setTimeout(() => {
-      if (connecterrored) return;
-      console.log("Connected to mysql without any errors!");
-      res.redirect("/update/configuring");
-    }, 5000);
-  } catch (e) {}
+  }
+  await fs.writeFile("./modules/core/config.json", JSON.stringify(config));
+  configuredb(req, res);
+}
+
+async function configuredb(req) {
+  let config = await fs.readFileSync("./modules/core/config.json", "utf-8");
+  let db = await new mongo.Database(config.mongourl);
+  db.set("jsboard.userdata.1", {
+    username: req.body.mainusername,
+    login: {
+      email: req.body.mainuseremail,
+      password: await bcrypt.hash(req.body.mainuserpassword, 10),
+    },
+    permissions: {
+      admin: true,
+    },
+  });
 }
