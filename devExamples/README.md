@@ -1,1 +1,3 @@
-# JSBoard `Module` and `Theming` documentation is avalible at **COMING SOON**
+# JSBoard docs
+For documentation relating to `Modules` and `Themes`
+Link: **COMING SOON**
