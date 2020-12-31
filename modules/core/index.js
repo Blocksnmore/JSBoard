@@ -7,11 +7,11 @@ const { config } = require("process");
 const mongo = require("quickmongo");
 const bcrypt = require("bcrypt");
 
-exports.needConfig = async function () {
+exports.needConfig = function () {
   if (!fs.existsSync("./modules/core/config.json")) return true;
   return false;
 };
-exports.config = async function () {
+exports.config = function () {
   if (!fs.existsSync("./modules/core/config.json"))
     return {
       isConfigured: false,
@@ -57,21 +57,21 @@ async function updateConfig(req, res, path, data) {
       error: e,
     });
   }
-  await fs.writeFile("./modules/core/config.json", JSON.stringify(config));
+  await fs.writeFileSync("./modules/core/config.json", JSON.stringify(config));
   configuredb(req, res);
 }
 
-async function configuredb(req) {
+async function configuredb(req, res) {
   let config = await fs.readFileSync("./modules/core/config.json", "utf-8");
-  let db = await new mongo.Database(config.mongourl);
+  let db = await new mongo.Database(req.body.mongologin);
   db.set("jsboard.userdata.1", {
     username: req.body.mainusername,
     login: {
       email: req.body.mainuseremail,
       password: await bcrypt.hash(req.body.mainuserpassword, 10),
     },
-    permissions: {
-      admin: true,
-    },
+    permissions: ["ADMINISTRATOR"],
   });
+  console.log("JSBoard setup has been finished! Redirecting user to home.");
+  res.render("update/configured")
 }
