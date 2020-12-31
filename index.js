@@ -122,4 +122,16 @@ app.post("/*", async (req, res) => {
   if (wasoverritten) return;
 });
 
-app.listen(process.env.port | 3000);
+app.listen(process.env.port | 3000, () => {
+  console.log("━━┏┓┏━━━┓┏━━┓━━━━━━━━━━━━━━━┏┓");
+  console.log("━━┃┃┃┏━┓┃┃┏┓┃━━━━━━━━━━━━━━━┃┃");
+  console.log("━━┃┃┃┗━━┓┃┗┛┗┓┏━━┓┏━━┓━┏━┓┏━┛┃");
+  console.log("┏┓┃┃┗━━┓┃┃┏━┓┃┃┏┓┃┗━┓┃━┃┏┛┃┏┓┃");
+  console.log("┃┗┛┃┃┗━┛┃┃┗━┛┃┃┗┛┃┃┗┛┗┓┃┃━┃┗┛┃");
+  console.log("┗━━┛┗━━━┛┗━━━┛┗━━┛┗━━━┛┗┛━┗━━┛");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("Starting JSBoard `MONGO`");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("Thanks for supporting my development and using my projects");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+});
