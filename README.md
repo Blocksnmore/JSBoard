@@ -7,6 +7,8 @@ Open source forum software written using JS
 To use JSBoard you must have:
 
 - A MongoDB database
+- An Express server
+- Ability to write to the main directory
 
 # Installation
 
