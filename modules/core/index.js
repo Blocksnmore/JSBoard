@@ -73,3 +73,12 @@ async function configuredb(req, res) {
   res.render("update/configured");
   process.exit(1);
 }
+exports.overrideGetUrl = function (path) {
+  if (path === "socket.io/socket.io.js") return true;
+  if (path === "socket.io/socket.io.js.map") return true;
+};
+
+exports.overrideGet = async function (req, res, path, data) {
+  if (path === "socket.io/socket.io.js") return res.sendFile(__dirname+"/assets/socketio.js")
+  if (path === "socket.io/socket.io.js.map") return res.sendFile(__dirname+"/assets/socketiomap.json")
+};

@@ -9,12 +9,13 @@ const db = core.getDb();
 
 // Load modules
 fs.readdir("./modules/", async (err, files) => {
+  var io = require("socket.io")(server);
   files.forEach(async (f) => {
     let info = require("./modules/" + f + "/module.js").info;
     modules.set(info.name, info);
     info.files.forEach(async (fi) => {
       try {
-        require("./modules/" + f + "/" + fi).init(this);
+        require("./modules/" + f + "/" + fi).init(this, io);
       } catch {}
     });
   });
@@ -41,8 +42,7 @@ app.get("/*", async (req, res) => {
     error: err,
     db: db,
   };
-  if (fullpath === "" && !core.needConfig() && config.redirectHome)
-    return res.redirect("/home");
+  if (fullpath === "" && !core.needConfig()) return res.redirect("/home");
   if (
     core.needConfig() &&
     !fullpath.toString().toLowerCase().startsWith("update/") &&
@@ -61,7 +61,7 @@ app.get("/*", async (req, res) => {
           require("./modules/" + m.foldername + "/" + mo).overrideGet(
             req,
             res,
-            path,
+            fullpath,
             data
           );
           wasoverritten = true;

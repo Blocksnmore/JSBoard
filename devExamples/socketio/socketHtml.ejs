@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+        function test(){
+            socket.emit('test')
+        }
+        socket.on('rec', ()=>{
+            console.log("got res")
+        })
+    </script>
+    <button onclick="test()">test</button>
+  </body>
+</html>
