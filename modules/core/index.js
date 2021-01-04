@@ -3,15 +3,15 @@
  * @description JSBoard core module
  **/
 const fs = require("fs");
-const { config } = require("process");
 const mongo = require("quickmongo");
 const bcrypt = require("bcrypt");
 
-exports.needConfig = function () {
+function needConfig() {
   if (!fs.existsSync("./modules/core/config.json")) return true;
   return false;
-};
-exports.config = function () {
+}
+exports.needConfig = needConfig;
+function Config() {
   if (!fs.existsSync("./modules/core/config.json"))
     return {
       isConfigured: false,
@@ -19,16 +19,12 @@ exports.config = function () {
       updateMode: true,
     };
   return JSON.parse(fs.readFileSync("./modules/core/config.json", "utf8"));
-};
+}
+exports.config = Config;
 
 exports.getDb = function () {
-  if (!fs.existsSync("./modules/core/config.json")) return null;
-  else
-    return new mongo.Database(
-      JSON.parse(
-        fs.readFileSync("./modules/core/config.json", "utf8")
-      ).mongologin
-    );
+  if (!Config().isConfigured) return null;
+  else return new mongo.Database(Config().mongourl);
 };
 
 exports.overridePostUrl = function (path) {
@@ -40,11 +36,13 @@ exports.overridePost = async function (req, res, path, data) {
 };
 
 async function updateConfig(req, res, path, data) {
+  if(!needConfig()) return;
   let config = {
     isConfigured: true,
     version: "Beta 2.0.0",
     updateMode: false,
     mongourl: req.body.mongologin,
+    sitename: req.body.sitename,
   };
   try {
     let db = await new mongo.Database(config.mongourl);
@@ -62,7 +60,6 @@ async function updateConfig(req, res, path, data) {
 }
 
 async function configuredb(req, res) {
-  let config = await fs.readFileSync("./modules/core/config.json", "utf-8");
   let db = await new mongo.Database(req.body.mongologin);
   db.set("jsboard.userdata.1", {
     username: req.body.mainusername,
@@ -72,6 +69,7 @@ async function configuredb(req, res) {
     },
     permissions: ["ADMINISTRATOR"],
   });
-  console.log("JSBoard setup has been finished! Redirecting user to home.");
-  res.render("update/configured")
+  console.log("JSBoard setup has been finished! Redirecting user to configured page and shutting down server");
+  res.render("update/configured");
+  process.exit(1);
 }

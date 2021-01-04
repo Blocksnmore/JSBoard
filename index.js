@@ -2,16 +2,19 @@ const express = require("express");
 const fs = require("fs");
 const app = express();
 const core = require("./modules/core/index.js");
+const http = require("http");
+const server = http.createServer(app); // Add support for using socket.io down the line
 var modules = new Map();
+const db = core.getDb();
 
 // Load modules
 fs.readdir("./modules/", async (err, files) => {
   files.forEach(async (f) => {
-    let info = require("./modules/" + files + "/module.js").info;
+    let info = require("./modules/" + f + "/module.js").info;
     modules.set(info.name, info);
     info.files.forEach(async (fi) => {
       try {
-        require("./modules/" + files + "/" + fi).init(this);
+        require("./modules/" + f + "/" + fi).init(this);
       } catch {}
     });
   });
@@ -36,6 +39,7 @@ app.get("/*", async (req, res) => {
     needConfig: core.needConfig(),
     updatemode: config.updateMode,
     error: err,
+    db: db,
   };
   if (fullpath === "" && !core.needConfig() && config.redirectHome)
     return res.redirect("/home");
@@ -98,6 +102,7 @@ app.post("/*", async (req, res) => {
     config: config,
     updatemode: config.updateMode,
     error: err,
+    db: db,
   };
   modules.forEach((m) => {
     m.files.forEach((mo) => {
@@ -122,7 +127,7 @@ app.post("/*", async (req, res) => {
   if (wasoverritten) return;
 });
 
-app.listen(process.env.port | 3000, () => {
+server.listen(process.env.port | 3000, () => {
   console.log("━━┏┓┏━━━┓┏━━┓━━━━━━━━━━━━━━━┏┓");
   console.log("━━┃┃┃┏━┓┃┃┏┓┃━━━━━━━━━━━━━━━┃┃");
   console.log("━━┃┃┃┗━━┓┃┗┛┗┓┏━━┓┏━━┓━┏━┓┏━┛┃");

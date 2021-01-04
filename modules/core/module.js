@@ -6,7 +6,5 @@ exports.info = {
   name: "Core",
   foldername: "core",
   desc: "JSBoard core",
-  files: [
-    "index.js"
-  ],
+  files: ["index.js"],
 };
