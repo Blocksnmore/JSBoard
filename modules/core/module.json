@@ -1,0 +1,17 @@
+{
+  "name": "jsbcore",
+  "toggleable": false,
+  "description": "JSBoard core module",
+  "depends": [],
+  "softdepends": [],
+  "files": ["index.js"],
+
+  "@comments": {
+    "name": "Name of Module (MUST BE LOWERCASE AND NOT HAVE SPACES)",
+    "toggleable": "If the module can be toggled on and off via the staff panel",
+    "description": "Summary of the module",
+    "depends": "Any modules required to use this module",
+    "softdepends": "Any modules not required but suggested to use this module",
+    "files": "List of all files in the module. **ONLY JS/TS FILES NOT ASSETS**"
+  }
+}
