@@ -13,6 +13,8 @@
     "bcrypt": "^5.0.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "quick.db": "^7.1.3",
     "quickmongo": "^3.0.0",
     "socket.io": "^3.0.4"
   },
@@ -20,6 +22,7 @@
     "bcrypt": "Needed for security with storing logins in a database",
     "ejs": "'Engine' for the site",
     "express": "Used to host the site",
+    "express-session": "Used for storing the sessions",
     "quickmongo/quickdb/quick-mysql": "Quick and simple manager for db storing",
     "socket.io": "Add the ability to do live changes to the client ie notifications"
   }
