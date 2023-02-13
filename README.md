@@ -1,3 +1,5 @@
+# Please visit https://github.com/Wave-Studio/JSBoard for the latest version!
+
 # JSBoard
 
 Open source forum software written using JS
